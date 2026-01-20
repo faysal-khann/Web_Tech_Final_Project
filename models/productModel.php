@@ -36,6 +36,20 @@ function searchProducts($searchTerm)
     return $products;
 }
 
+function getProductById($productId)
+{
+    $conn = dbConnect();
+    $query = "SELECT p.*, c. categoryName FROM products p 
+              JOIN categories c ON p.categoryId = c.categoryId 
+              WHERE p.productId=$productId";
+    $data = mysqli_query($conn, $query);
+    
+    if (mysqli_num_rows($data) > 0) {
+        return mysqli_fetch_assoc($data);
+    }
+    return null;
+}
+
 
 function getProductsByCategory($categoryId)
 {

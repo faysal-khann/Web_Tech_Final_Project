@@ -24,23 +24,23 @@ function createOrder($customerId, $productId, $quantity, $unitPrice)
     $conn = dbConnect();
     $totalPrice = $quantity * $unitPrice;
     
-    // Check stock availability
-    $checkQuery = "SELECT quantity FROM products WHERE productId=$productId";
-    $result = mysqli_query($conn, $checkQuery);
+    
+    $checkQuantityQuery = "SELECT quantity FROM products WHERE productId=$productId";
+    $result = mysqli_query($conn, $checkQuantityQuery);
     $product = mysqli_fetch_assoc($result);
     
     if ($product['quantity'] < $quantity) {
         return false;
     }
     
-    // Create order
-    $query = "INSERT INTO orders (customerId, productId, quantity, unitPrice, totalPrice) 
+   
+    $query_CreateOrder = "INSERT INTO orders (customerId, productId, quantity, unitPrice, totalPrice) 
               VALUES ($customerId, $productId, $quantity, $unitPrice, $totalPrice)";
-    mysqli_query($conn, $query);
+    mysqli_query($conn, $query_CreateOrder);
     
-    // Reduce stock
-    $updateStock = "UPDATE products SET quantity = quantity - $quantity WHERE productId=$productId";
-    mysqli_query($conn, $updateStock);
+    
+    $ReduceStock = "UPDATE products SET quantity = quantity - $quantity WHERE productId=$productId";
+    mysqli_query($conn, $ReduceStock);
     
     return mysqli_affected_rows($conn) > 0;
 }

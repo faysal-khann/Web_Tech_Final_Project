@@ -9,9 +9,9 @@ require_once("../../models/productModel.php");
 require_once("../../models/orderModel.php");
 require_once("../../models/wishlistModel.php");
 
-$products = getAllProducts();
-$orders = getOrdersByCustomer($_SESSION['userId']);
-$wishlist = getWishlistByCustomer($_SESSION['userId']);
+$products = getAllProducts();  //Product Model
+$orders = getOrdersByCustomer($_SESSION['userId']); //Order model
+$wishlist = getWishlistByCustomer($_SESSION['userId']);  //Wishlist model
 ?>
 
 

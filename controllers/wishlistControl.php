@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     if ($action == "add") {
-        $result = addToWishlist($customerId, $productId);
+        $result = addToWishlist($customerId, $productId); //WishList Model
         
         if ($result) {
             header("Location:  ../views/customer_views/browseProducts.php?success=" .  urlencode("Added to wishlist"));
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header("Location: ../views/customer_views/browseProducts.php? genErr=" . urlencode("Failed to add to wishlist"));
         }
     } elseif ($action == "remove") {
-        $result = removeFromWishlist($customerId, $productId);
+        $result = removeFromWishlist($customerId, $productId); //WishList Model
         
         if ($result) {
             header("Location:  ../views/customer_views/wishlist.php?success=" . urlencode("Removed from wishlist"));

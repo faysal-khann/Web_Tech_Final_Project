@@ -47,4 +47,39 @@ function emailExists($email)
 }
 
 
+function getUserById($userId)
+{
+    $conn = dbConnect();
+    $query = "SELECT * FROM users WHERE userId=$userId";
+    $data = mysqli_query($conn, $query);
+    
+    if (mysqli_num_rows($data) > 0) {
+        return mysqli_fetch_assoc($data);
+    }
+    return null;
+}
+
+
+function updateUserProfile($userId, $firstName, $lastName, $phone, $address)
+{
+    $conn = dbConnect();
+    $firstName = mysqli_real_escape_string($conn, $firstName);
+    $lastName = mysqli_real_escape_string($conn, $lastName);
+    $phone = mysqli_real_escape_string($conn, $phone);
+    $address = mysqli_real_escape_string($conn, $address);
+    
+    $query = "UPDATE users SET firstName='$firstName', lastName='$lastName', phone='$phone', address='$address' WHERE userId=$userId";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn) >= 0;
+}
+
+function deleteUserProfile($userId)
+{
+    $conn = dbConnect();
+    $query = "DELETE FROM users WHERE userId=$userId";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn) > 0;
+}
+
+
 ?>

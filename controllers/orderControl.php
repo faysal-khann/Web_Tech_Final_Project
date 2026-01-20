@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    $product = getProductById($productId);
+    $product = getProductById($productId); //Product model
     
     if (!$product) {
         header("Location:  ../views/customer_views/browseProducts.php?genErr=" . urlencode("Product not found"));
@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $unitPrice = $product['price'] - ($product['price'] * $product['offerPercent'] / 100);
     }
     
-    $result = createOrder($customerId, $productId, $quantity, $unitPrice);
+    $result = createOrder($customerId, $productId, $quantity, $unitPrice); //Order model
     
     if ($result) {
         header("Location: ../views/customer_views/orderHistory.php?success=" . urlencode("Order placed successfully"));

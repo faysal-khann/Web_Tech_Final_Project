@@ -9,16 +9,16 @@ require_once("../../models/productModel.php");
 require_once("../../models/categoryModel.php");
 require_once("../../models/wishlistModel.php");
 
-$categories = getAllCategories();
+$categories = getAllCategories();  //CategoryModel
 $searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
 $categoryFilter = isset($_GET['category']) ? intval($_GET['category']) : 0;
 
 if (! empty($searchTerm)) {
-    $products = searchProducts($searchTerm);
+    $products = searchProducts($searchTerm);  //Product Model
 } elseif ($categoryFilter > 0) {
-    $products = getProductsByCategory($categoryFilter);
+    $products = getProductsByCategory($categoryFilter);  //Product Model
 } else {
-    $products = getAllProducts();
+    $products = getAllProducts();  //Product Model
 }
 ?>
 
@@ -34,9 +34,8 @@ if (! empty($searchTerm)) {
 </head>
 <body>
 
-
-<header>
-    <nav class="navbar">
+    <section class="welcome-section">
+      <nav class="navbar">
         <a href="home.php" class="navbar-brand">🔌 GadgetGrid</a>
         <ul class="navbar-menu">
             <li><a href="home.php">Dashboard</a></li>
@@ -49,16 +48,13 @@ if (! empty($searchTerm)) {
             <span>Hi, <?php echo htmlspecialchars($_SESSION['userName']); ?></span>
             <a href="../logout.php" class="btn-logout">Logout</a>
         </div>
-    </nav>
-
-</header>
-    
-
-
+      </nav>
+    </section>
 
 
     
     <div class="main-container">
+
         <div class="page-header">
             <h1>Browse Products</h1>
             <p>Discover our collection of premium tech accessories</p>
@@ -76,20 +72,18 @@ if (! empty($searchTerm)) {
 
 
 
-
-
-
-
         <div class="content-box">
-            <form method="GET" class="search-box">
+
+            <section class="Searching">
+              <form method="GET" class="search-box">
                 <input type="text" name="search" placeholder="Search products..." value="<?php echo htmlspecialchars($searchTerm); ?>">
 
                 <select name="category">
                     <option value="0">All Categories</option>
                     <?php foreach ($categories as $cat): ?>
-                        <option value="<?php echo $cat['categoryId']; ?>" <?php echo ($categoryFilter == $cat['categoryId']) ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($cat['categoryName']); ?>
-                        </option>
+                    <option value="<?php echo $cat['categoryId']; ?>" >
+                        <?php echo htmlspecialchars($cat['categoryName']); ?>
+                    </option>
                     <?php endforeach; ?>
                 </select>
 
@@ -97,7 +91,7 @@ if (! empty($searchTerm)) {
                 <?php if (!empty($searchTerm) || $categoryFilter > 0): ?>
                     <a href="browseProducts.php" class="btn btn-outline">Clear</a>
                 <?php endif; ?>
-            </form>
+              </form>
 
 
             
@@ -108,12 +102,11 @@ if (! empty($searchTerm)) {
                     <p>Try adjusting your search or filter criteria</p>
                 </div>
             <?php else: ?>
-                <p style="color: #666; margin-bottom: 20px;"><?php echo count($products); ?> product(s) found</p>
+            <p style="color: #666; margin-bottom: 20px;"><?php echo count($products); ?> product(s) found</p>
+          </section>
 
 
-
-
-
+            <section class="Product Show">
 
                 <div class="product-grid">
                     <?php foreach ($products as $prod): 
@@ -121,7 +114,8 @@ if (! empty($searchTerm)) {
                         if ($prod['offerPercent'] > 0) {
                             $finalPrice = $prod['price'] - ($prod['price'] * $prod['offerPercent'] / 100);
                         }
-                        $inWishlist = isInWishlist($_SESSION['userId'], $prod['productId']);
+
+                        $inWishlist = isInWishlist($_SESSION['userId'], $prod['productId']);  //WishList Model
                     ?>
                         <div class="product-card">
                             <div class="product-image">
@@ -160,6 +154,7 @@ if (! empty($searchTerm)) {
                                     <?php else: ?>
                                         <button class="btn btn-outline btn-block" disabled>Out of Stock</button>
                                     <?php endif; ?>
+
                                     <form action="../../controllers/wishlistControl.php" method="POST">
                                         <input type="hidden" name="productId" value="<?php echo $prod['productId']; ?>">
                                         <input type="hidden" name="action" value="<?php echo $inWishlist ? 'remove' : 'add'; ?>">
@@ -173,13 +168,13 @@ if (! empty($searchTerm)) {
                         </div>
                     <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
+              <?php endif; ?>
+ 
+            </section>
+
+
+
         </div>
-
-
-
-
-
 
 
 
