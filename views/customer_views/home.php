@@ -27,7 +27,7 @@ $wishlist = getWishlistByCustomer($_SESSION['userId']);  //Wishlist model
 <body>
 
 <header>
-    Header:
+   
     <nav>
         <a href="home.php">🔌 GadgetGrid</a>
         <ul>
@@ -43,7 +43,7 @@ $wishlist = getWishlistByCustomer($_SESSION['userId']);  //Wishlist model
         </div>
     </nav><br>
 
-    //Header
+    
 </header>
 
 

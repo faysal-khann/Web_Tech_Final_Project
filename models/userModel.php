@@ -5,7 +5,10 @@ function authUser($email, $pass)
 {
     $conn = dbConnect();
     $email = mysqli_real_escape_string($conn, $email);
-    $pass = mysqli_real_escape_string($conn, $pass);
+    $pass_entered = mysqli_real_escape_string($conn, $pass);
+
+    //MD 5 Password
+    $pass = md5($pass_entered);
     
     $query = "SELECT * FROM users WHERE email='$email' AND password='$pass'";
     $data = mysqli_query($conn, $query);
@@ -27,11 +30,15 @@ function registerUser($email, $password, $firstName, $lastName, $phone, $address
     $lastName = mysqli_real_escape_string($conn, $lastName);
     $phone = mysqli_real_escape_string($conn, $phone);
     $address = mysqli_real_escape_string($conn, $address);
+
+    //MD 5 Password
+    $encpassword = md5($password);
+    
     
     $status = ($role == 3) ? 'active' : 'pending';
     
     $query = "INSERT INTO users (email, password, firstName, lastName, phone, address, role, status) 
-              VALUES ('$email', '$password', '$firstName', '$lastName', '$phone', '$address', $role, '$status')";
+              VALUES ('$email', '$encpassword', '$firstName', '$lastName', '$phone', '$address', $role, '$status')";
     
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn) > 0;
@@ -79,6 +86,26 @@ function deleteUserProfile($userId)
     $query = "DELETE FROM users WHERE userId=$userId";
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn) > 0;
+}
+
+function changePassword($userId, $newPassword_before_MD5)
+{
+    $conn = dbConnect();
+    $pass = md5($newPassword_before_MD5);
+    $newPassword = mysqli_real_escape_string($conn, $pass);
+    $query = "UPDATE users SET password='$newPassword' WHERE userId=$userId";
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn) > 0;
+}
+
+function verifyPassword($userId, $currentPassword_before_MD5)
+{
+    $conn = dbConnect();
+    $pass = md5($currentPassword_before_MD5);
+    $currentPassword = mysqli_real_escape_string($conn, $pass);
+    $query = "SELECT userId FROM users WHERE userId=$userId AND password='$currentPassword'";
+    $data = mysqli_query($conn, $query);
+    return mysqli_num_rows($data) > 0;
 }
 
 
