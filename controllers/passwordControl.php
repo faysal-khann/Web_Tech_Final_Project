@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    $result = changePassword($userId, $newPassword);
+    $result = changePassword($userId, $newPassword); //User Model
     
     if ($result) {
         header("Location: " . $redirect .  "?success=" . urlencode("Password changed successfully"));

@@ -7,7 +7,8 @@ if (!isset($_SESSION['userId']) || $_SESSION['role'] != 2) {
     exit();
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+ {
     $action = isset($_POST["action"]) ? $_POST["action"] : "";
     
     if ($action == "add") {
@@ -17,7 +18,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $specifications = isset($_POST["specifications"]) ? trim($_POST["specifications"]) : "";
         $price = isset($_POST["price"]) ? floatval($_POST["price"]) : 0;
         $quantity = isset($_POST["quantity"]) ? intval($_POST["quantity"]) : 0;
-        
+
+        // Handle the image upload
+        $imagePath = "";
+    if (isset($_FILES["productImage"]) && $_FILES["productImage"]["error"] == 0)
+     {
+    $uploadDir = "../uploads/products/";
+    global $imagePath;
+    $imageName = basename($_FILES["productImage"]["name"]);
+    $imagePath = $imageName; // WE STORE ONLY THE FILENAME IN DB
+
+    move_uploaded_file($_FILES["productImage"]["tmp_name"], $uploadDir . $imageName);
+    }
+            
+
+
+
         $errors = [];
         
         if ($categoryId == 0) {
@@ -29,20 +45,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($price <= 0) {
             $errors[] = "priceErr=" . urlencode("Price must be greater than 0");
         }
-        
+
         if (!empty($errors)) {
             header("Location: ../views/employee_views/addProduct.php?" . implode("&", $errors));
             exit();
         }
         
-        $result = addProduct($categoryId, $productName, $description, $specifications, $price, $quantity);
+        // Pass the image path to the addProduct function
+        $result = addProduct($categoryId, $productName, $description, $specifications, $price, $quantity, $imagePath);
         
         if ($result) {
             header("Location: ../views/employee_views/manageProducts.php?success=" .  urlencode("Product added successfully"));
         } else {
             header("Location: ../views/employee_views/addProduct.php?genErr=" . urlencode("Failed to add product"));
         }
-    } elseif ($action == "update") {
+    }
+    elseif ($action == "update") {
         $productId = isset($_POST["productId"]) ? intval($_POST["productId"]) : 0;
         $categoryId = isset($_POST["categoryId"]) ? intval($_POST["categoryId"]) : 0;
         $productName = isset($_POST["productName"]) ? trim($_POST["productName"]) : "";

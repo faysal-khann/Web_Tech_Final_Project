@@ -23,13 +23,13 @@ $categories = getAllCategories();
             <p>Employee Panel</p>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="home.php"> Dashboard</a></li>
-            <li><a href="manageCustomers.php"> Customers</a></li>
-            <li><a href="manageProducts.php" class="active"> Products</a></li>
-            <li><a href="manageStock.php"> Stock Management</a></li>
-            <li><a href="manageOffers.php"> Offers</a></li>
-            <li><a href="profile.php"> Profile</a></li>
-            <li><a href="changePassword.php"> Change Password</a></li>
+            <li><a href="home.php">📊 Dashboard</a></li>
+            <li><a href="manageCustomers.php">👥 Customers</a></li>
+            <li><a href="manageProducts.php" class="active">📦 Products</a></li>
+            <li><a href="manageStock.php">📥 Stock Management</a></li>
+            <li><a href="manageOffers.php">🏷️ Offers</a></li>
+            <li><a href="profile.php">⚙️ Profile</a></li>
+            <li><a href="changePassword.php">🔐 Change Password</a></li>
         </ul>
     </div>
     
@@ -38,7 +38,7 @@ $categories = getAllCategories();
             <h1>Add New Product</h1>
             <div class="header-user">
                 <span>Welcome, <?php echo htmlspecialchars($_SESSION['userName']); ?></span>
-                <a href="../logout. php" class="btn-logout">Logout</a>
+                <a href="../logout.php" class="btn-logout">Logout</a>
             </div>
         </div>
         
@@ -47,7 +47,8 @@ $categories = getAllCategories();
                 <div class="general-error"><?php echo htmlspecialchars($_GET["genErr"]); ?></div>
             <?php endif; ?>
             
-            <form action="../../controllers/productControl.php" method="POST" id="productForm">
+            
+            <form action="../../controllers/productControl.php" method="POST" id="productForm" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="add">
                 
                 <div class="form-group">
@@ -98,6 +99,15 @@ $categories = getAllCategories();
                         <input type="number" id="quantity" name="quantity" min="0" value="0" placeholder="0">
                     </div>
                 </div>
+
+                <!-- Image Upload Section -->
+                <div class="form-group">
+                    <label for="productImage">Product Image</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*">
+                    <?php if (isset($_GET["imageErr"])): ?>
+                        <span class="error-message"><?php echo htmlspecialchars($_GET["imageErr"]); ?></span>
+                    <?php endif; ?>
+                </div>
                 
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn btn-primary">Add Product</button>
@@ -123,7 +133,7 @@ $categories = getAllCategories();
             }
             
             const price = parseFloat(document.getElementById('price').value);
-            if (! price || price <= 0) {
+            if (!price || price <= 0) {
                 document.getElementById('priceError').textContent = 'Price must be greater than 0';
                 isValid = false;
             }

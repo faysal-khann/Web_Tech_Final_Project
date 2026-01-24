@@ -14,12 +14,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     $redirect = "";
     switch ($role) {
-        case 1: $redirect = "../views/admin_views/profile.php"; break;
-        case 2: $redirect = "../views/employee_views/profile.php"; break;
-        case 3: $redirect = "../views/customer_views/profile.php"; break;
+        case 1: 
+        $redirect = "../views/admin_views/profile.php"; 
+        break;
+        case 2: 
+        $redirect = "../views/employee_views/profile.php"; 
+        break;
+        case 3: 
+        $redirect = "../views/customer_views/profile.php";
+        break;
     }
     
-    if ($action == "update") {
+    if ($action == "update") 
+        
+    {
         $firstName = isset($_POST["firstName"]) ? trim($_POST["firstName"]) : "";
         $lastName = isset($_POST["lastName"]) ? trim($_POST["lastName"]) : "";
         $phone = isset($_POST["phone"]) ? trim($_POST["phone"]) : "";
@@ -44,11 +52,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         if ($result) {
             $_SESSION['userName'] = $firstName . ' ' .  $lastName;
-            header("Location: " . $redirect .  "? success=" . urlencode("Profile updated successfully"));
+            header("Location: " . $redirect .  "?success=" . urlencode("Profile updated successfully"));
         } else {
             header("Location: " . $redirect .  "?genErr=" . urlencode("Failed to update profile"));
         }
-    } elseif ($action == "delete") {
+    } 
+    
+    elseif ($action == "delete") {
         $result = deleteUserProfile($userId);
         
         if ($result) {

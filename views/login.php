@@ -8,14 +8,14 @@ if (isset($_SESSION['userId'])) {
     }
     exit();
 }
-?> 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - GadgetGrid</title>
-    
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -59,36 +59,44 @@ if (isset($_SESSION['userId'])) {
         </div>
     </div>
     
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            let isValid = true;
-            
-           
-            document.getElementById('emailError').textContent = '';
-            document.getElementById('passwordError').textContent = '';
-            
-            const email = document.getElementById('email').value. trim();
-            const password = document.getElementById('password').value;
-            
-   
-            if (!email) {
-                document.getElementById('emailError').textContent = 'Email is required';
-                isValid = false;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                document.getElementById('emailError').textContent = 'Invalid email format';
-                isValid = false;
-            }
-            
-          
-            if (!password) {
-                document.getElementById('passwordError').textContent = 'Password is required';
-                isValid = false;
-            }
-            
-            if (!isValid) {
-                e.preventDefault();
-            }
-        });
-    </script>
+<script>
+    const loginEmail = document.getElementById('email');
+    const loginEmailError = document.getElementById('emailError');
+
+    let loginTimer = null;
+
+    loginEmail.addEventListener('keyup', function () {
+    clearTimeout(loginTimer);
+
+    loginTimer = setTimeout(() => {
+        const email = loginEmail.value.trim();
+
+        if (!email) {
+            loginEmailError.textContent = '';
+            return;
+        }
+
+        fetch(`../controllers/checkLoginEmail.php?email=${encodeURIComponent(email)}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "exists") {
+                    loginEmailError.textContent = data.message;
+                    loginEmailError.style.color = "green";
+                } else if (data.status === "not_found") {
+                    loginEmailError.textContent = data.message;
+                    loginEmailError.style.color = "red";
+                } else {
+                    loginEmailError.textContent = data.message;
+                    loginEmailError.style.color = "red";
+                }
+            })
+            .catch(() => {
+                loginEmailError.textContent = "Server error";
+                loginEmailError.style.color = "red";
+            });
+
+    }, 500);
+});
+</script>
 </body>
 </html>

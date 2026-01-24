@@ -53,9 +53,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     if ($result) {
         if ($role == 2) {
-            header("Location: ../views/login.php");
+            header("Location: ../views/login.php?success=".urlencode("Registration successful!  Please wait for admin approval."));
         } else {
-            header("Location: ../views/login.php");
+            header("Location: ../views/login.php?success=".urlencode("Registration successful! You can now login."));
         }
     } else {
         header("Location: ../views/register.php? genErr=".urlencode("Registration failed. Please try again."));
